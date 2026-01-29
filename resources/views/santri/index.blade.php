@@ -163,6 +163,16 @@
                     <div class="card-body p-4">
                         <h5 class="card-title text-info mb-4 fw-bold">➕ Input Data Santri</h5>
 
+                        @if ($errors->any())
+                        <div class="alert alert-danger border-0 small mb-3">
+                            <ul class="mb-0 ps-3">
+                                @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                        @endif
+
                         <form action="{{ route('santri.store') }}" method="POST">
                             @csrf
                             <div class="mb-3">
@@ -179,7 +189,7 @@
                             </div>
                             <div class="mb-3">
                                 <label class="text-secondary small">Angkatan</label>
-                                <input type="text" name="angkatan" class="form-control bg-dark border-secondary text-white" placeholder="Angakatam ke - (Angka)" required>
+                                <input type="text" name="angkatan" class="form-control bg-dark border-secondary text-white" placeholder="Angkatan ke- (Angka)" required>
                             </div>
                             <div class="mb-4">
                                 <label class="text-secondary small">Asrama</label>
@@ -221,31 +231,39 @@
                             <table class="table table-custom align-middle">
                                 <thead class="border-bottom border-secondary">
                                     <tr class="text-secondary text-uppercase small text-center">
+                                        <th>NO</th>
                                         <th>NIS</th>
                                         <th class="text-start">NAMA</th>
+                                        <th>ASRAMA</th>
                                         <th>ASAL</th>
                                         <th>ANGKATAN</th>
-                                        <th>ASRAMA</th>
-                                        <th>CATATAN</th>
+                                        <th>AKSI</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @forelse($santris as $s)
                                     <tr class="border-bottom border-secondary">
+
+                                        <td class="text-center text-secondary small">{{ $loop->iteration }}</td>
+
                                         <td class="fw-bold text-info text-center">{{ $s->nis }}</td>
 
                                         <td class="text-start">
                                             <div class="fw-bold">{{ $s->nama }}</div>
                                         </td>
-                                        <td class="text-center">
-                                            <span class="badge bg-dark border border-secondary">{{ $s->asal }}</span>
-                                        </td>
-                                        <td class="text-center">
-                                            <span class="badge bg-dark border border-secondary">Angk. {{ $s->angkatan }}</span>
-                                        </td>
+
                                         <td class="text-center">
                                             <span class="badge bg-dark border border-secondary text-warning">{{ $s->asrama }}</span>
                                         </td>
+
+                                        <td class="text-center">
+                                            <span class="badge bg-dark border border-secondary">{{ $s->asal }}</span>
+                                        </td>
+
+                                        <td class="text-center">
+                                            <span class="badge bg-dark border border-secondary">Angk. {{ $s->angkatan }}</span>
+                                        </td>
+
                                         <td class="text-center">
                                             <div class="d-flex justify-content-center gap-1">
                                                 <a href="{{ route('santri.show', $s->id) }}" class="btn btn-sm btn-primary rounded-pill px-3">Detail</a>
@@ -259,7 +277,7 @@
                                     </tr>
                                     @empty
                                     <tr>
-                                        <td colspan="6" class="text-center py-5 text-secondary">
+                                        <td colspan="7" class="text-center py-5 text-secondary">
                                             <i class="bi bi-search fs-1 d-block mb-3 opacity-50"></i>
                                             Data tidak ditemukan.
                                         </td>
@@ -273,7 +291,6 @@
             </div>
         </div>
     </div>
-
 </body>
 
 </html>

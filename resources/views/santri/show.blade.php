@@ -131,9 +131,9 @@
                             <div class="mb-3">
                                 <label class="small">Tingkat</label>
                                 <select name="tingkat" class="form-select" required>
-                                    <option value="ringan">🟡 Ringan (Teguran)</option>
-                                    <option value="sedang">🟠 Sedang (Fisik)</option>
-                                    <option value="berat">🔴 Berat (SP/Ortu)</option>
+                                    <option value="ringan">🟡 Ringan </option>
+                                    <option value="sedang">🟠 Sedang </option>
+                                    <option value="berat">🔴 Berat </option>
                                 </select>
                             </div>
                             <div class="mb-3"><label class="small">Keterangan</label><textarea name="keterangan" class="form-control" rows="2"></textarea></div>
