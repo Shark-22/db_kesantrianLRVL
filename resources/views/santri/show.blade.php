@@ -88,9 +88,9 @@
             <a href="{{ route('santri.index') }}" class="text-decoration-none">
                 &larr; Kembali ke Dashboard
             </a>
-            <button onclick="window.print()" class="btn btn-primary btn-sm fw-bold">
-                🖨️ Cetak Laporan
-            </button>
+            <a href="{{ route('santri.cetakPdf', $santri->id) }}" target="_blank" class="btn btn-primary btn-sm">
+    <i class="bi bi-printer-fill me-1"></i> Cetak Laporan
+</a>
         </div>
 
         <div class="card mb-5 border-0" style="background: linear-gradient(90deg, #1e293b 0%, #334155 100%);">

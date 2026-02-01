@@ -50,11 +50,6 @@
             cursor: pointer;
             transition: 0.3s;
         }
-
-        .bg-brown {
-            background-color: #cd7f32 !important;
-            color: white;
-        }
     </style>
 </head>
 
@@ -68,10 +63,16 @@
                 <p class="text-secondary mb-0 small">Selamat Datang, <strong>{{ Auth::user()->name ?? 'Admin' }}</strong></p>
             </div>
 
-            <form action="{{ route('logout') }}" method="POST">
-                @csrf
-                <button class="btn btn-danger btn-sm px-4 rounded-pill fw-bold">Logout 🚪</button>
-            </form>
+            <div class="d-flex gap-2">
+                <a href="{{ route('leaderboard.index') }}" class="btn btn-warning btn-sm px-3 rounded-pill fw-bold">
+                    <i class="bi bi-trophy-fill me-1"></i> Leaderboard
+                </a>
+                
+                <form action="{{ route('logout') }}" method="POST">
+                    @csrf
+                    <button class="btn btn-danger btn-sm px-4 rounded-pill fw-bold">Logout 🚪</button>
+                </form>
+            </div>
         </div>
 
         @if(session('success'))
@@ -80,81 +81,82 @@
         </div>
         @endif
 
-        <div class="row mb-4">
-
-            <div class="col-md-6 mb-3 mb-md-0">
-                <div class="card border-0 h-100 shadow-sm glass-card" style="background: rgba(220, 53, 69, 0.15) !important; color: #ff8787;">
+        <div class="row g-4 mb-5">
+            
+            <div class="col-md-6">
+                <div class="card h-100 shadow-sm border-0 glass-card" style="border-left: 5px solid #dc3545 !important;">
+                    <div class="card-header border-0 bg-transparent pt-4 pb-0">
+                        <h5 class="fw-bold text-danger"><i class="bi bi-exclamation-triangle-fill me-2"></i>PELANGGAR TERBANYAK</h5>
+                    </div>
                     <div class="card-body">
-                        <div class="d-flex align-items-center mb-3 border-bottom border-danger pb-2">
-                            <i class="bi bi-exclamation-triangle-fill fs-3 me-2 text-danger"></i>
-                            <h5 class="fw-bold mb-0 text-uppercase text-white">
-                                {{ $judulWorst ?? 'Pelanggar Terbanyak' }}
-                            </h5>
-                        </div>
-
-                        @if(isset($topViolators) && $topViolators->count() > 0)
-                        <div class="list-group list-group-flush rounded">
-                            @foreach($topViolators as $index => $bad)
-                            <a href="{{ route('santri.show', $bad->id) }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center bg-transparent border-bottom border-secondary text-white px-2 py-2 text-decoration-none">
+                        <div class="d-flex flex-column gap-3">
+                            @forelse($topViolators as $index => $s)
+                            <a href="{{ route('santri.show', $s->id) }}" 
+                               class="d-flex align-items-center justify-content-between p-3 rounded-3 text-decoration-none" 
+                               style="background: rgba(220, 53, 69, 0.1); transition: all 0.2s ease-in-out;"
+                               onmouseover="this.style.background='rgba(220, 53, 69, 0.2)'; this.style.transform='translateX(5px)'"
+                               onmouseout="this.style.background='rgba(220, 53, 69, 0.1)'; this.style.transform='translateX(0)'">
+                               
                                 <div class="d-flex align-items-center">
-                                    <span class="badge rounded-pill me-3 bg-danger text-white" style="width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;">
-                                        {{ $index + 1 }}
-                                    </span>
+                                    <div class="rounded-circle bg-danger text-white d-flex align-items-center justify-content-center fw-bold me-3" style="width: 35px; height: 35px;">
+                                        {{ $loop->iteration }}
+                                    </div>
                                     <div>
-                                        <span class="fw-bold d-block text-white">{{ $bad->nama }}</span>
-                                        <small style="color: #ffc9c9;">{{ $bad->asrama }} - Angk. {{ $bad->angkatan }}</small>
+                                        <h6 class="text-white mb-0 fw-bold">{{ $s->nama }}</h6>
+                                        <small class="text-secondary">{{ $s->asrama }} - Angk. {{ $s->angkatan }}</small>
                                     </div>
                                 </div>
-                                <span class="badge bg-danger rounded-pill px-3 shadow-sm border border-light">{{ $bad->violations_count }} Kasus</span>
+                                <span class="badge bg-danger rounded-pill px-3">{{ $s->total_dosa }} Poin</span>
                             </a>
-                            @endforeach
+                            @empty
+                            <div class="text-center text-secondary py-4">
+                                <i class="bi bi-emoji-smile fs-1 mb-2 d-block"></i>
+                                Alhamdulillah, belum ada pelanggaran.
+                            </div>
+                            @endforelse
                         </div>
-                        @else
-                        <div class="text-center py-4">
-                            <i class="bi bi-emoji-smile fs-1 text-success mb-2"></i>
-                            <p class="mb-0 fw-bold text-success">Alhamdulillah!</p>
-                            <small class="text-white-50">Tidak ada pelanggaran tercatat bulan ini.</small>
-                        </div>
-                        @endif
                     </div>
                 </div>
             </div>
 
             <div class="col-md-6">
-                <div class="card border-0 h-100 shadow-sm glass-card" style="background: rgba(25, 135, 84, 0.15) !important; color: #69db7c;">
+                <div class="card h-100 shadow-sm border-0 glass-card" style="border-left: 5px solid #198754 !important;">
+                    <div class="card-header border-0 bg-transparent pt-4 pb-0">
+                        <h5 class="fw-bold text-success"><i class="bi bi-trophy-fill me-2"></i>SANTRI BERPRESTASI</h5>
+                    </div>
                     <div class="card-body">
-                        <div class="d-flex align-items-center mb-3 border-bottom border-success pb-2">
-                            <i class="bi bi-trophy-fill fs-3 me-2 text-warning"></i>
-                            <h5 class="fw-bold mb-0 text-uppercase" style="color: #ffc107;">
-                                {{ $judulBest ?? 'Kandidat Teladan' }}
-                            </h5>
-                        </div>
-
-                        @if(isset($bestCandidates) && $bestCandidates->count() > 0)
-                        <div class="list-group list-group-flush rounded">
-                            @foreach($bestCandidates as $index => $winner)
-                            <a href="{{ route('santri.show', $winner->id) }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center bg-transparent border-bottom border-secondary text-white px-2 py-2 text-decoration-none">
+                        <div class="d-flex flex-column gap-3">
+                            @forelse($topAchievers as $index => $s)
+                            
+                            <a href="{{ route('santri.show', $s->id) }}" 
+                               class="d-flex align-items-center justify-content-between p-3 rounded-3 text-decoration-none" 
+                               style="background: rgba(25, 135, 84, 0.1); transition: all 0.2s ease-in-out;"
+                               onmouseover="this.style.background='rgba(25, 135, 84, 0.2)'; this.style.transform='translateX(5px)'"
+                               onmouseout="this.style.background='rgba(25, 135, 84, 0.1)'; this.style.transform='translateX(0)'">
+                               
                                 <div class="d-flex align-items-center">
-                                    <span class="badge rounded-pill me-3 {{ $index==0 ? 'bg-warning text-dark' : ($index==1 ? 'bg-secondary' : 'bg-brown') }}" style="width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;">
-                                        {{ $index + 1 }}
-                                    </span>
+                                    <div class="rounded-circle bg-success text-white d-flex align-items-center justify-content-center fw-bold me-3" style="width: 35px; height: 35px;">
+                                        {{ $loop->iteration }}
+                                    </div>
                                     <div>
-                                        <span class="fw-bold d-block">{{ $winner->nama }}</span>
-                                        <small class="text-secondary" style="color: #cbd5e1 !important;">{{ $winner->asrama }} - Angk. {{ $winner->angkatan }}</small>
+                                        <h6 class="text-white mb-0 fw-bold">{{ $s->nama }}</h6>
+                                        <small class="text-secondary">{{ $s->asrama }} - Angk. {{ $s->angkatan }}</small>
                                     </div>
                                 </div>
-                                <span class="badge bg-success rounded-pill px-3 shadow-sm">{{ $winner->violations_count }} Poin</span>
+                                <span class="badge bg-success rounded-pill px-3">{{ $s->total_pahala }} Poin</span>
                             </a>
-                            @endforeach
+                            @empty
+                            <div class="text-center text-secondary py-4">
+                                <i class="bi bi-emoji-neutral fs-1 mb-2 d-block"></i>
+                                Belum ada data prestasi.
+                            </div>
+                            @endforelse
                         </div>
-                        @else
-                        <p class="small text-secondary mb-0 text-center py-3">Belum ada data kandidat.</p>
-                        @endif
                     </div>
                 </div>
             </div>
-
         </div>
+
 
         <div class="row g-4">
 
@@ -209,21 +211,20 @@
                         <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-2">
                             <h5 class="card-title text-warning mb-0 fw-bold">📋 Data Santri</h5>
 
-                            <form action="{{ route('santri.index') }}" method="GET" class="d-flex gap-2 flex-grow-1 justify-content-end align-items-center">
-
-                                <select name="filter_angkatan" class="form-select form-select-sm bg-dark text-white border-secondary" style="max-width: 140px;" onchange="this.form.submit()">
+                            <form action="{{ route('santri.index') }}" method="GET" class="d-flex gap-2">
+                                <select name="angkatan" class="form-select bg-dark text-white border-secondary" onchange="this.form.submit()">
                                     <option value="">Semua Angk.</option>
                                     @foreach($dataAngkatan as $angk)
-                                    <option value="{{ $angk }}" {{ request('filter_angkatan') == $angk ? 'selected' : '' }}>
-                                        Angkatan {{ $angk }}
-                                    </option>
+                                        <option value="{{ $angk }}" {{ request('angkatan') == $angk ? 'selected' : '' }}>
+                                            Angkatan {{ $angk }}
+                                        </option>
                                     @endforeach
                                 </select>
-
-                                <div class="input-group input-group-sm" style="max-width: 200px;">
-                                    <input type="text" name="search" class="form-control bg-dark text-white border-secondary" placeholder="Cari Nama/NIS..." value="{{ request('search') }}">
-                                    <button type="submit" class="btn btn-primary"><i class="bi bi-search"></i></button>
-                                </div>
+                                
+                                <input type="text" name="search" class="form-control bg-dark text-white border-secondary" 
+                                       placeholder="Cari Nama/NIS..." value="{{ request('search') }}">
+                                
+                                <button type="submit" class="btn btn-primary"><i class="bi bi-search"></i></button>
                             </form>
                         </div>
 
@@ -243,27 +244,20 @@
                                 <tbody>
                                     @forelse($santris as $s)
                                     <tr class="border-bottom border-secondary">
-
-                                        <td class="text-center text-secondary small">{{ $loop->iteration }}</td>
-
+                                        <td class="text-center text-secondary small">{{ $loop->iteration + $santris->firstItem() - 1 }}</td>
                                         <td class="fw-bold text-info text-center">{{ $s->nis }}</td>
-
                                         <td class="text-start">
                                             <div class="fw-bold">{{ $s->nama }}</div>
                                         </td>
-
                                         <td class="text-center">
                                             <span class="badge bg-dark border border-secondary text-warning">{{ $s->asrama }}</span>
                                         </td>
-
                                         <td class="text-center">
                                             <span class="badge bg-dark border border-secondary">{{ $s->asal }}</span>
                                         </td>
-
                                         <td class="text-center">
                                             <span class="badge bg-dark border border-secondary">Angk. {{ $s->angkatan }}</span>
                                         </td>
-
                                         <td class="text-center">
                                             <div class="d-flex justify-content-center gap-1">
                                                 <a href="{{ route('santri.show', $s->id) }}" class="btn btn-sm btn-primary rounded-pill px-3">Detail</a>
@@ -286,11 +280,12 @@
                                 </tbody>
                             </table>
                         </div>
-                    </div>
+                        
+                        </div>
                 </div>
             </div>
         </div>
+
     </div>
 </body>
-
 </html>

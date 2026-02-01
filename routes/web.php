@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SantriController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\LeaderboardController;
 
 // --- 1. JALUR UMUM (Bisa diakses siapa saja) ---
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
@@ -10,6 +11,8 @@ Route::post('/login', [AuthController::class, 'login'])->name('login.post');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
 Route::post('/register', [AuthController::class, 'register'])->name('register.post');
+Route::get('/santri/{id}/cetak', [SantriController::class, 'cetakPdf'])->name('santri.cetakPdf');
+Route::get('/leaderboard', [LeaderboardController::class, 'index'])->name('leaderboard.index');
 
 // --- 2. JALUR RAHASIA (Harus Login Dulu) ---
 // Kita bungkus semua route lama dengan middleware 'auth'
